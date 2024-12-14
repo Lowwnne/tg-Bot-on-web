@@ -6,11 +6,11 @@ class Card:
     cvv = None
     card_date = None
 
-    def __init__(self, cvv: int = None, number: str = None, card_date: str = None):
+    def __init__(self, cvv: int = None, number: str = None, card_date: str = None) -> None:
         self.set_data()
         print(self.get_data())
 
-    def set_data(self, cvv: int = None, number: str = None, card_date: str = None):
+    def set_data(self, cvv: int = None, number: str = None, card_date: str = None) -> None:
         if number is None:
             self.numebr = self.generate_number()
         else:
@@ -22,10 +22,10 @@ class Card:
         if card_date is None:
             self.card_date = date.today().isoformat()
 
-    def get_data(self):
+    def get_data(self) -> str:
         return f'Number: {self.number}\nCVV: {self.cvv}\nDate: {self.card_date}'
 
-    def generate_number(self):
+    def generate_number(self) -> str:
         self.number = ''
         self.number += str(randint(1000, 10000))
 
