@@ -1,43 +1,44 @@
-from random import randint
-from datetime import date
+# https://api.telegram.org/bot6531110683:AAFX7L-n1andA4uZqYhYDAC6RG4aWxNQWF4/getUpdates?offset=-1
+from tg_send_type import send_message, send_photo
 
-class Card:
-    number = None
-    cvv = None
-    card_date = None
+API_URL = 'https://api.telegram.org/bot'
+BOT_TOKEN = '6531110683:AAFX7L-n1andA4uZqYhYDAC6RG4aWxNQWF4'
+MAX_COUNTER = 100
+API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
 
-    def __init__(self, cvv: int = None, number: str = None, card_date: str = None) -> None:
-        self.set_data()
-        print(self.get_data())
+def tg_cat_request(API_URL, BOT_TOKEN, MAX_COUNTER):
+    import requests
+    import time
 
-    def set_data(self, cvv: int = None, number: str = None, card_date: str = None) -> None:
-        if number is None:
-            self.numebr = self.generate_number()
-        else:
-            self.number = number
+    offset = -2
+    chat_id: int
+    counter = 0
+    cat_response: requests.Response
 
-        if cvv is None:
-            self.cvv = randint(100, 1000)
+    while counter < MAX_COUNTER:
+        print('attempt=', counter)
 
-        if card_date is None:
-            self.card_date = date.today().isoformat()
+        updates = requests.get(f'{API_URL}{BOT_TOKEN}/getUpdates?offset={offset + 1}').json()
 
-    def get_data(self) -> str:
-        return f'Number: {self.number}\nCVV: {self.cvv}\nDate: {self.card_date}'
-
-    def generate_number(self) -> str:
-        self.number = ''
-        self.number += str(randint(1000, 10000))
-
-        for _ in range(3):
-            n = randint(1000, 10000)
-
-            while n == int(self.number[-1 * (len(self.number) - 2): -1]):
-                n = randint(1000, 10000)
-
-            self.number += str(n)
-
-        return self.number
+        if updates['result']:
+            for result in updates['result']:
+                offset = result['update_id']
+                chat_id = result['message']['from']['id']
+                message_text = result['message']['text']
+                if message_text == 'котика на базу':
+                    cat_response = requests.get(API_CATS_URL)
+                    if cat_response.status_code == 200:
+                        cat_link = cat_response.json()[0]['url']
+                        send_photo(cat_link, chat_id, BOT_TOKEN)
+                    else:
+                        send_message('Сегодня без котиков (', chat_id, BOT_TOKEN)
+                elif message_text == 'сосал?':
+                    send_message('Пфф. Конечно!', chat_id, BOT_TOKEN)
 
 
-card = Card()
+        time.sleep(1)
+        counter += 1
+
+
+if __name__ == '__main__':
+    tg_cat_request(API_URL, BOT_TOKEN, MAX_COUNTER)
