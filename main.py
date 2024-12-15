@@ -2,7 +2,7 @@
 from tg_send_type import send_message, send_photo
 
 API_URL = 'https://api.telegram.org/bot'
-BOT_TOKEN = '6531110683:AAFX7L-n1andA4uZqYhYDAC6RG4aWxNQWF4'
+BOT_TOKEN = open('token.txt').readline()
 MAX_COUNTER = 100
 API_CATS_URL = 'https://api.thecatapi.com/v1/images/search'
 
