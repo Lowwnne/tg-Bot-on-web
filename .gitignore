@@ -3,3 +3,4 @@ venv/
 .gitignore
 .DS_Store
 token.txt
+__pycache__
