@@ -1,4 +1,4 @@
-# https://api.telegram.org/bot6531110683:AAFX7L-n1andA4uZqYhYDAC6RG4aWxNQWF4/getUpdates?offset=-1
+# https://api.telegram.org/bot<bot token>/getUpdates?offset=-1
 from tg_send_type import send_message, send_photo
 
 API_URL = 'https://api.telegram.org/bot'
